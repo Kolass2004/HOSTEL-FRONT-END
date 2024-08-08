@@ -105,10 +105,10 @@ button {
 }
 
 .mainChoice>fieldset>label{
-  margin: 8%;
+  margin: 5%;
    
 }
-.etcdetails-weird {
+.etcdetails-weird{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
