@@ -141,6 +141,10 @@ button {
     .blorp-group {
         flex: 1 1 calc(50% - 20px);
     }
+    .mainChoice>fieldset>label{
+        margin: 2%;
+         
+      }
 }
 @media (max-width: 600px) {
     .blorp-group {
@@ -173,6 +177,10 @@ button {
     .mainChoice>fieldset>label{
         margin: 3%;
         margin-top: 5%;
+         
+      }
+      .mainChoice>fieldset>label{
+        margin: 1%;
          
       }
 }
