@@ -78,7 +78,7 @@
     <script>
         async function fetchStudentData() {
             try {
-                const response = await fetch('http://localhost:3000/studentData');
+                const response = await fetch('https://hostel-back-end.vercel.app/studentData');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
