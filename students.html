@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f0f0f0;
+            overflow: hidden; /* Prevent scroll during loading */
         }
 
         h1 {
@@ -56,6 +57,21 @@
             font-weight: bold;
         }
 
+        .student button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        .student button:hover {
+            background-color: #c0392b;
+        }
+
         @media (max-width: 600px) {
             .student {
                 padding: 10px;
@@ -69,9 +85,32 @@
                 font-size: 0.9em;
             }
         }
+
+        /* Loading screen styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #loading-message {
+            font-size: 1.5em;
+            color: #333;
+        }
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <div id="loading-message">Loading...</div>
+    </div>
+
     <h1>Student Details</h1>
     <div id="student-container"></div>
 
@@ -87,6 +126,10 @@
             } catch (error) {
                 console.error('Error fetching student data:', error);
                 document.getElementById('student-container').innerText = 'Error fetching student data';
+            } finally {
+                // Hide loading screen
+                document.getElementById('loading-screen').style.display = 'none';
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
             }
         }
 
@@ -124,10 +167,36 @@
                     <p><strong>Resident Last Year:</strong> ${student.residentLastYear ? 'Yes' : 'No'}</p>
                     <p><strong>Previous Hostel Name:</strong> ${student.previousHostelName}</p>
                     <p><strong>Previous Hostel Place:</strong> ${student.previousHostelPlace}</p>
+                    <p><strong>ID:</strong> ${student._id}</p>
+                    <button onclick="deleteStudent('${student._id}')">Delete</button>
                 `;
 
                 container.appendChild(studentDiv);
             });
+        }
+
+        async function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                try {
+                    const response = await fetch(`https://hostel-back-end.vercel.app/delete`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: studentId }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    alert('Student deleted successfully!');
+                    fetchStudentData(); // Refresh the student list
+                } catch (error) {
+                    console.error('Error deleting student:', error);
+                    alert('Error deleting student');
+                }
+            }
         }
 
         // Fetch student data on page load
