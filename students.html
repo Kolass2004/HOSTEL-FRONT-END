@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #student-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .student {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .student img {
+            width: 100px; /* Fixed width */
+            height: 100px; /* Fixed height */
+            object-fit: cover; /* Maintain aspect ratio and cover the element */
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .student h2 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+        }
+
+        .student p {
+            margin: 5px 0;
+        }
+
+        .student p strong {
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .student {
+                padding: 10px;
+            }
+
+            .student h2 {
+                font-size: 1em;
+            }
+
+            .student p {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Details</h1>
+    <div id="student-container"></div>
+
+    <script>
+        async function fetchStudentData() {
+            try {
+                const response = await fetch('http://localhost:3000/studentData');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const students = await response.json();
+                displayStudentData(students);
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                document.getElementById('student-container').innerText = 'Error fetching student data';
+            }
+        }
+
+        function displayStudentData(students) {
+            const container = document.getElementById('student-container');
+            container.innerHTML = '';
+
+            if (students.length === 0) {
+                container.innerText = 'No student data available';
+                return;
+            }
+
+            students.forEach(student => {
+                const studentDiv = document.createElement('div');
+                studentDiv.className = 'student';
+
+                studentDiv.innerHTML = `
+                    ${student.image ? `<img src="data:image/jpeg;base64,${student.image}" alt="${student.name}'s Image">` : ''}
+                    <h2>Name: ${student.name}</h2>
+                    <p><strong>Age:</strong> ${student.age}</p>
+                    <p><strong>Subject:</strong> ${student.subject}</p>
+                    <p><strong>Date of Birth:</strong> ${student.dob}</p>
+                    <p><strong>Class:</strong> ${student.class}</p>
+                    <p><strong>Blood Group:</strong> ${student.bloodGroup}</p>
+                    <p><strong>Religion:</strong> ${student.religion}</p>
+                    <p><strong>Caste:</strong> ${student.caste}</p>
+                    <p><strong>Dalit Christian:</strong> ${student.dalitChristian ? 'Yes' : 'No'}</p>
+                    <p><strong>Father's Name:</strong> ${student.fatherName}</p>
+                    <p><strong>Parent's Occupation:</strong> ${student.parentOccupation}</p>
+                    <p><strong>Parent's Address:</strong> ${student.parentAddress}</p>
+                    <p><strong>Parent's Mobile No:</strong> ${student.parentMobileNo}</p>
+                    <p><strong>Student's Mobile No:</strong> ${student.studentMobileNo}</p>
+                    <p><strong>Pincode:</strong> ${student.pincode}</p>
+                    <p><strong>Previous School:</strong> ${student.previousSchool}</p>
+                    <p><strong>Resident Last Year:</strong> ${student.residentLastYear ? 'Yes' : 'No'}</p>
+                    <p><strong>Previous Hostel Name:</strong> ${student.previousHostelName}</p>
+                    <p><strong>Previous Hostel Place:</strong> ${student.previousHostelPlace}</p>
+                `;
+
+                container.appendChild(studentDiv);
+            });
+        }
+
+        // Fetch student data on page load
+        fetchStudentData();
+    </script>
+</body>
+</html>
