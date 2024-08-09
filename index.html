@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <h1 style="text-align: center;">SJC Hostel Form</h1>
+    <h1 style="text-align: center;">SH Hostel Form</h1>
     <form id="sjcHostelForm" enctype="multipart/form-data">
         <div class="wrapperTop">
             <div class="image">
-                <label for="image"><img src="assets/images/user.png" alt="" height="200" width="200"></label>
-                <input type="file" id="image" name="image" style="display: none;">
+                <label for="image">
+                    <img id="imagePreview" src="assets/images/user.png" alt="" height="200" width="200">
+                </label>
+                <input type="file" id="image" name="image" style="display: none;" required>
             </div>
             <div class="wibbly-wobbly">
                 <div class="wibbly-row">
@@ -114,6 +116,23 @@
     </form>
 
     <script>
+        // Image Preview
+        const imageInput = document.getElementById('image');
+        const imagePreview = document.getElementById('imagePreview');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.setAttribute('src', event.target.result);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.setAttribute('src', 'assets/images/user.png');
+            }
+        });
+
         document.getElementById('sjcHostelForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the default form submission
 
@@ -129,6 +148,7 @@
                     alert('Form submitted successfully!');
                     // Optionally reset the form
                     this.reset();
+                    imagePreview.setAttribute('src', 'assets/images/user.png'); // Reset the image preview
                 } else {
                     alert('Form submission failed.');
                 }
